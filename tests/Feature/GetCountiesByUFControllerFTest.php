@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class GetCountiesByUFControllerFTest extends TestCase
 {
-    public function testGetCountiesByUFSuccess(): void
+    public function testGetCountiesByUFThanApiSuccess(): void
     {
         $apiResponse = [
             ['nome' => 'Aracaju', 'codigo_ibge' => 2800308],
@@ -19,25 +19,34 @@ class GetCountiesByUFControllerFTest extends TestCase
             '*/SE' => Http::response($apiResponse, 200)
         ]);
 
-        $response = $this->get("api/municipios/SE");
+        $response = $this->get('api/municipios/SE');
 
         $response->assertStatus(HttpResponse::HTTP_OK);
 
         $this->assertNotEmpty($response->json());
     }
 
-    public function testGetCountiesByUFFailure(): void
+    public function testGetCountiesByUFThanApiFailure(): void
     {
         $apiResponse = [
             ['nome' => 'Aracaju', 'codigo_ibge' => 2800308],
             ['nome' => 'Araua', 'codigo_ibge' => 2800407],
         ];
+        $invalidUF = 'BI';
 
         Http::fake([
-            '*/SE' => Http::response($apiResponse, 400)
+            "*/$invalidUF" => Http::response($apiResponse, 400)
         ]);
 
-        $response = $this->get("api/municipios/SE");
+        $response = $this->get("api/municipios/$invalidUF");
         $response->assertStatus(400);
+    }
+
+    public function testGetCountiesByInvalidUFFailure(): void
+    {
+        $invalidUF = 'BAA';
+
+        $response = $this->get("api/municipios/$invalidUF");
+        $response->assertStatus(404);
     }
 }

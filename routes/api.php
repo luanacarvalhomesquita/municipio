@@ -14,4 +14,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/municipios/{uf}', GetCountiesByUFController::class);
+Route::get('/municipios/{uf}', GetCountiesByUFController::class)->where('uf', '[A-Za-z]{2}');
