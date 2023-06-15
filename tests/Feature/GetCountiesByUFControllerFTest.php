@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Repertoire;
+namespace Tests\Feature;
 
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Http;
