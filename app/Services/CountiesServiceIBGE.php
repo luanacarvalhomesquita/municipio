@@ -10,6 +10,12 @@ class CountiesServiceIBGE implements CountiesServiceInterface
 {
     private const GET_CONTRIES_URL = "/v1/localidades/estados/%s/municipios";
 
+    /**
+     * Listar municípios por UF.
+     *
+     * @param string $uf Sigla da UF.
+     * @return array
+     */
     public function getCountiesByUF(string $uf): array
     {
         $response = $this->fetchCountiesFromAPI($uf);
@@ -21,6 +27,12 @@ class CountiesServiceIBGE implements CountiesServiceInterface
         throw new CountiesServiceIBGEException();
     }
 
+    /**
+     * Buscar uma lista de municípios via API.
+     *
+     * @param string $uf Sigla da UF.
+     * @return Response
+     */
     public function fetchCountiesFromAPI(string $uf): Response
     {
         try {
@@ -31,6 +43,12 @@ class CountiesServiceIBGE implements CountiesServiceInterface
         }
     }
 
+    /**
+     * Formatar uma lista de municípios.
+     *
+     * @param array $counties lista de municipios.
+     * @return array
+     */
     public function formatCounties(array $counties): array
     {
         return array_map(fn ($county) => [
@@ -39,6 +57,12 @@ class CountiesServiceIBGE implements CountiesServiceInterface
         ], $counties);
     }
 
+    /**
+     * Buscar a BaseUrl da API no .env
+     *
+     * @param array $counties lista de municipios.
+     * @return string
+     */
     private function getBaseUrlBasilApi(): string
     {
         return env('BASE_URL_IBGE_API');
