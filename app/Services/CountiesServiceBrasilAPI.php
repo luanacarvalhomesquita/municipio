@@ -52,7 +52,7 @@ class CountiesServiceBrasilAPI implements CountiesServiceInterface
     private function formatCounties(array $counties): array
     {
         return array_map(fn ($county) => [
-            'name' => $county['nome'],
+            'name' => ucwords(strtolower($county['nome'])),
             'ibge_code' => $county['codigo_ibge'],
         ], $counties);
     }
