@@ -3,18 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Services\CountiesServiceInterface;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class GetCountiesByUFController extends Controller
 {
-    public function __construct(protected readonly CountiesServiceInterface $countiesService)
-    {
+    public function __construct(
+        protected readonly CountiesServiceInterface $countiesService
+    ) {
     }
 
-    public function __invoke(string $uf): Response
+    public function __invoke(string $uf): JsonResponse
     {
         $counties = $this->countiesService->getCountiesByUF($uf);
-
-        return response($counties);
+        return $this->responseJson(data: $counties);
     }
 }

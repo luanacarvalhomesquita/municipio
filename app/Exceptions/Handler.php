@@ -2,11 +2,14 @@
 
 namespace App\Exceptions;
 
+use App\Http\Helpers\ResponseJson;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
 class Handler extends ExceptionHandler
 {
+    use ResponseJson;
+
     /**
      * A list of exception types with their corresponding custom log levels.
      *
@@ -46,5 +49,19 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+    }
+
+    /**
+     * Process a view and generate its content to be displayed or sent as a response
+     * 
+     * @return void
+     */
+    public function render($request, Throwable $exception): mixed
+    {
+        if ($exception instanceof GenericException) {
+            return $this->responseJson($exception->getError(), $exception->getStaus());
+        }
+
+        return parent::render($request, $exception);
     }
 }

@@ -2,13 +2,13 @@
 
 namespace App\Services;
 
+use App\Exceptions\Services\CountiesServiceBrasilApiException;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 
 class CountiesServiceBrasilAPI implements CountiesServiceInterface
 {
-    private const GET_CONTRIES_URL = "/ibge/municipios/";
-    private const VERSION_API = "/v1";
+    private const GET_CONTRIES_URL = '/ibge/municipios/v1/';
 
     public function getCountiesByUF(string $uf): array
     {
@@ -18,22 +18,22 @@ class CountiesServiceBrasilAPI implements CountiesServiceInterface
             return $this->formatCounties($response->json());
         }
 
-        throw new \Exception('Não foi possível obter os municípios da API BrasilAPI.');
+        throw new CountiesServiceBrasilApiException();
     }
 
     public function fetchCountiesFromAPI(string $uf): Response
     {
         try {
             $baseUrlApi = $this->getBaseUrlBasilApi();
-            return Http::get(sprintf($baseUrlApi . self::GET_CONTRIES_URL . self::VERSION_API . "/$uf"));
+            return Http::get(sprintf($baseUrlApi . self::GET_CONTRIES_URL . $uf));
         } catch (\Exception $e) {
-            throw new \Exception('Não foi possível obter os municípios da API BrasilAPI. Tente novamente!');
+            throw new CountiesServiceBrasilApiException();
         }
     }
 
     public function formatCounties(array $counties): array
     {
-        return array_map(fn($county) => [
+        return array_map(fn ($county) => [
             'name' => $county['nome'],
             'ibge_code' => $county['codigo_ibge'],
         ], $counties);
